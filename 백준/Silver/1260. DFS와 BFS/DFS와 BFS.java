@@ -55,7 +55,7 @@ class Main {
 	}
 
 	private static void dfs(int cnt, int start, int[][] graph, boolean[] visited, StringBuilder result) {
-		result.append(start).append(" ");
+		result.append(start + " ");
 		int[] arr = graph[start];
 
 		for (int i = 1; i < arr.length; i++) {
