@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 class Solution {
 	public int[] solution(String[] operations) {
-		// 1. 우선순위 큐 (min heap, max heap) 각각 생성
+		// 1. 리스트를 활용한 큐 방식
 		// 2. 명령어 실행하며 최소, 최대 삭제할 값을 최종 리스트에서 해당 값 제거
 		// 3. 최종 리스트 검사
 		List<Integer> resultList = new ArrayList<>();
