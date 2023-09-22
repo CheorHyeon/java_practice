@@ -1,28 +1,19 @@
 class Solution {
     public String solution(String s) {
       String answer = "";
+        String[] sArr = s.split("");
+        // 다음에 나타나는 문자가첫글자 인지 여부
+        boolean flag = true;
         
-        String[] arr = s.split(" ");
-        for(int i=0; i<arr.length; i++) {
-            String now = arr[i];
-            
-            // 공백이라면 길이가 0
-            // 연속된 공백 문자도 분할 기준으로 간주 -> 공백 문자 들어감
-            // 공백 연속되었다는 의미이니 공백 추가
-            if(now.length() == 0){
-                answer += " ";
-            }
-            
-            else {
-                answer += now.substring(0, 1).toUpperCase();
-                answer += now.substring(1).toLowerCase();
-                answer += " ";
-            }
+        for(String a : sArr) {
+             // 첫글자면 대문자화
+            // toUpperCase 및 toLowerCase 메서드는 숫자나 공백은 변환이 무시됨
+            answer += flag ? a.toUpperCase() : a.toLowerCase();
+            // 만일 공백이면 다음에 나올것이 대문자니깐 트루, 아니면 false
+            flag = a.equals(" ")? true:false;
         }
-        // 마지막 문자가 공백이라면 공백 그대로 반환
-        if(s.charAt(s.length() - 1) == ' ') {
-            return answer;
-        }
-        return answer.trim();
+        
+        return answer;
+        
     }
 }
