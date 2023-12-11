@@ -15,7 +15,7 @@ class Solution {
 		if (num == 1 || num % 2 == 0)
 			return false;
 		// 루트값 까지만 나눠보기
-		for (long i = 3; i <= Math.sqrt(num); i++) {
+		for (int i = 3; i <= Math.sqrt(num); i++) {
 			if (num % i == 0)
 				return false;
 		}
@@ -29,7 +29,8 @@ class Solution {
 		String[] nums = number.split("0+");
 		int answer = 0;
 		for (String num : nums) {
-			if (check(Long.valueOf(num))) {
+        // 문자열 처음에 구분자가 나올 경우 split 메서드에 의해 공백 문자 발생
+			if (!num.equals("") && check(Long.valueOf(num))) {
 				answer++;
 			}
 		}
