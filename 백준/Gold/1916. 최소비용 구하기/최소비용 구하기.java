@@ -48,7 +48,7 @@ public class Main {
                 visit[now] = true;
                 for(Node n : list[now]) {
                     // 선택노드 + 비용 < 타깃 노드일 때 업데이트
-                    if(!visit[n.targetNode] && dist[n.targetNode] > dist[now] + n.value) {
+                    if(dist[n.targetNode] > dist[now] + n.value) {
                         dist[n.targetNode] = dist[now] + n.value;
                         pq.add(new Node(n.targetNode, dist[n.targetNode]));
                     }
