@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.PriorityQueue;
 
 class Solution {
 	int[][] map;
@@ -16,12 +17,12 @@ class Solution {
 			if (map[roadInfo[0]][roadInfo[1]] != 0) {
 				loadInfo = Math.min(map[roadInfo[0]][roadInfo[1]], loadInfo);
 			}
-			// 항상 최소 경로값인 경로로 갱신
+			// 항상 최소 경로값인 경로로 갱신 - 마을을 잇는 도로니까 양방향
 			map[roadInfo[0]][roadInfo[1]] = loadInfo;
 			map[roadInfo[1]][roadInfo[0]] = loadInfo;
 		}
 
-		// 2. bfs 탐색을 통해 1번부터 해당 마을로 갈 수 있는 최단경로 갱신
+		// 2. 다익스트라 알고리즘을 통해 1번부터 해당 마을로 갈 수 있는 최단경로 갱신
 		dijkstra(1);
 
 		// 3. k 이하인 마을 개수 반환
@@ -40,22 +41,23 @@ class Solution {
 		Arrays.fill(distance, 1_000_000_000);
 		// 자기 자신한테 가는 경로는 0
 		distance[start] = 0;
-		// 연결된 경로는 대체, 연결 안된것은 무한대
-		for (int i = 1; i < contryCount + 1; i++) {
-			if (map[start][i] != 0) {
-				distance[i] = map[start][i];
-			}
-		}
 
-		for (int i = 1; i < contryCount + 1; i++) {
-			// 1. 방문하지 않은 정점 중 최소 거리를 가진 정점을 찾음
-			int current = getSmallIndex(visited, distance);
-			// 2. 방문 처리
-			visited[current] = true;
-			// 3. 현재 정점에서 다른 정점으로의 거리를 갱신
-			for (int j = 1; j < contryCount + 1; j++) {
-				if (!visited[j] && map[current][j] != 0 && distance[current] + map[current][j] < distance[j]) {
-					distance[j] = distance[current] + map[current][j];
+		PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[1] - b[1]);
+		pq.add(new int[] {start, 0});
+
+		while (!pq.isEmpty()) {
+			int[] node = pq.poll();
+			int cur = node[0];
+			int edge = node[1];
+			visited[cur] = true;
+
+			// 방문하지 않은 노드들 중 현재 노드를 거쳐서 다음 노드를 갔을때 경로가 바로 간 경로보다 짧으면
+			// 우선순위큐에 넣고 거리 갱신
+			for (int i = 1; i <= contryCount; i++) {
+				if (!visited[i] && map[cur][i] != 0 && distance[i] > edge + map[cur][i]) {
+					// 거리 갱신 및 우선순위큐 삽입
+					distance[i] = edge + map[cur][i];
+					pq.add(new int[] {i, distance[i]});
 				}
 			}
 		}
@@ -64,17 +66,5 @@ class Solution {
 		for (int i = 1; i < contryCount + 1; i++) {
 			map[start][i] = distance[i];
 		}
-	}
-
-	private int getSmallIndex(boolean[] visited, int[] distance) {
-		int min = 1_000_000_000;
-		int index = 0;
-		for (int i = 1; i < contryCount + 1; i++) {
-			if (!visited[i] && distance[i] < min) {
-				min = distance[i];
-				index = i;
-			}
-		}
-		return index;
 	}
 }
