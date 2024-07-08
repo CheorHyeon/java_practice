@@ -1,6 +1,5 @@
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,16 +11,18 @@ class Solution {
 		int countBits(int n) {
 			int ret = 0;
 			while (n != 0) {
-				if((n & 1) != 0) ++ret;
+				if ((n & 1) != 0)
+					++ret;
 				n = n >> 1;
 			}
 			return ret;
 		}
+
 		@Override
 		public int compare(Integer o1, Integer o2) {
 			int x = countBits(o1);
 			int y = countBits(o2);
-			if(x > y) {
+			if (x > y) {
 				// 양수 리턴 : 처음값이 더 큼을 의미
 				return 1;
 			}
@@ -32,35 +33,40 @@ class Solution {
 				return 0;
 		}
 	};
-	boolean check (String[][] relation, int subSet) {
+
+	boolean check(String[][] relation, int subSet) {
 		// 모든 조합에 대해 값 비교
-		for(int a = 0; a < rowSize - 1; a++) {
-			for( int b = a + 1; b < rowSize; b++) {
-				boolean isSame = true;
-				for(int k = 0; k < colSize; k++) {
+		for (int a = 0; a < rowSize - 1; a++) {
+			for (int b = a + 1; b < rowSize; b++) {
+				StringBuilder sbA = new StringBuilder();
+				StringBuilder sbB = new StringBuilder();
+				for (int k = 0; k < colSize; k++) {
 					// k번째 비트를 키는것과 같다.
 					// k번째 비트가 0이라면 해당 속성은 고려 대상이 아님
-					if((subSet & 1 << k) == 0) continue;
-					if(!relation[a][k].equals(relation[b][k])) {
-						isSame = false;
-						break;
+					if ((subSet & 1 << k) == 0) {
+						continue;
 					}
+					// A에 대한 해당 속성 추가 생성
+					sbA.append(relation[a][k]);
+					sbB.append(relation[b][k]);
 				}
-				// 한번도 다른 점이 없었다 -> 모든 속성이 같다는 이야기
-				// 두 튜플이 구분이 안되기 때문에 유일성을 만족하지 않음
-				if(isSame) return false;
+				// 두 튜플에 해당 조합에 해당하는 속성의 합을 비교했을떄 같으면 유일성 만족하지 않은 조함
+				if (sbA.toString().equals(sbB.toString())) {
+					return false;
+				}
 			}
 		}
 		return true;
 	}
+
 	public int solution(String[][] relation) {
 		int answer = 0;
 		rowSize = relation.length;
 		colSize = relation[0].length;
 		// 1. 유일성 만족하는지 확인
 		List<Integer> candidates = new LinkedList<>();
-		for(int i = 1; i < 1 << colSize; i++) {
-			if(check(relation, i)) {
+		for (int i = 1; i < 1 << colSize; i++) {
+			if (check(relation, i)) {
 				candidates.add(i);
 			}
 		}
@@ -73,9 +79,9 @@ class Solution {
 			int n = candidates.remove(0);
 			++answer;
 
-			for(Iterator<Integer> it = candidates.iterator(); it.hasNext(); ) {
+			for (Iterator<Integer> it = candidates.iterator(); it.hasNext(); ) {
 				int c = it.next();
-				if((n & c) == n) {
+				if ((n & c) == n) {
 					it.remove();
 				}
 			}
